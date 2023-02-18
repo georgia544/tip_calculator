@@ -8,13 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 class CalculatorActivity : AppCompatActivity() {
 
     private val calculator = Calculator()
-    private lateinit var input: TextView
+    private lateinit var allCalculationsTextView: TextView
+    private  lateinit var  currentValueTextView: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calculator)
-        input = findViewById(R.id.input_text)
+        allCalculationsTextView = findViewById(R.id.all_calculations_text)
 
-        val result: TextView = findViewById(R.id.result_text)
+       currentValueTextView = findViewById(R.id.current_value_text)
 
 
         val button0 = findViewById<Button>(R.id.button0)
@@ -53,72 +54,77 @@ class CalculatorActivity : AppCompatActivity() {
         for (i in buttons.indices) {
             buttons[i].setOnClickListener {
                 if (shouldClearNumber) {
-                    result.text = i.toString()
+                    currentValueTextView.text = i.toString()
                     shouldClearNumber = false
                 } else {
 
-                    result.text = result.text.toString() + i
+                    currentValueTextView.text = currentValueTextView.text.toString() + i
                 }
 
 
-                input.text = input.text.toString() + i
+                allCalculationsTextView.text = allCalculationsTextView.text.toString() + i
             }
         }
 
 
         buttonDot.setOnClickListener {
-            result.text = result.text.toString() + "."
-            input.text = input.text.toString() + "."
+            currentValueTextView.text = currentValueTextView.text.toString() + "."
+            allCalculationsTextView.text = allCalculationsTextView.text.toString() + "."
         }
         buttonDelete.setOnClickListener {
-            result.text = removeLastChar(result.text.toString())
-            input.text = removeLastChar(input.text.toString())
+            currentValueTextView.text = removeLastChar(currentValueTextView.text.toString())
+            allCalculationsTextView.text = removeLastChar(allCalculationsTextView.text.toString())
         }
         buttonDeleteAll.setOnClickListener {
-            result.text = ""
-            input.text = ""
+            currentValueTextView.text = ""
+            allCalculationsTextView.text = ""
         }
 
 
         buttonPlus.setOnClickListener {
             shouldClearNumber = true
             setCalculatorProperties(CalculatorAction.PLUS)
-            input.text = input.text.toString() + "+"
+            allCalculationsTextView.text = allCalculationsTextView.text.toString() + "+"
         }
 
         buttonMinus.setOnClickListener {
             shouldClearNumber = true
             setCalculatorProperties(CalculatorAction.MINUS)
-            input.text = input.text.toString() + "-"
+            allCalculationsTextView.text = allCalculationsTextView.text.toString() + "-"
         }
 
         buttonDivide.setOnClickListener {
             shouldClearNumber = true
             setCalculatorProperties(CalculatorAction.DIVIDE)
-            input.text = input.text.toString() + "÷"
+            allCalculationsTextView.text = allCalculationsTextView.text.toString() + "÷"
         }
 
         buttonMultiple.setOnClickListener {
+            ifNoneInResult()
             shouldClearNumber = true
             setCalculatorProperties(CalculatorAction.MULTIPLY)
-            input.text = input.text.toString() + "x"
+            allCalculationsTextView.text = allCalculationsTextView.text.toString() + "x"
         }
 
         buttonEquals.setOnClickListener {
-            calculator.calculate(result.text.toSafeDouble())
-            result.text = calculator.number.removeZeroAfterDot()
+            calculator.calculate(currentValueTextView.text.toSafeDouble())
+            currentValueTextView.text = calculator.number.removeZeroAfterDot()
         }
-
 
     }
 
+    private fun ifNoneInResult(){
+        if(currentValueTextView.text==""){
+            currentValueTextView.text="0"
+            allCalculationsTextView.text ="0"
+        }
+    }
 
-
-    private fun Double.removeZeroAfterDot():String{
+    private fun Double.removeZeroAfterDot(): String {
         val newNum = this.toInt()
-        if (this-newNum != 0.0){
+        if (this - newNum != 0.0) {
             return this.toString()
-        }else{
+        } else {
             return newNum.toString()
         }
     }
@@ -132,8 +138,7 @@ class CalculatorActivity : AppCompatActivity() {
 
 
     private fun setCalculatorProperties(action: CalculatorAction) {
-        calculator.number = input.text.toSafeDouble()
-
+        calculator.number = currentValueTextView.text.toSafeDouble()
 
         calculator.action = action
     }
@@ -142,7 +147,7 @@ class CalculatorActivity : AppCompatActivity() {
         return this.toString().toDouble()
     }
 
-    private fun charSequenceToSafeDouble(charSequence: CharSequence):Double{
+    private fun charSequenceToSafeDouble(charSequence: CharSequence): Double {
         return charSequence.toString().toDouble()
     }
 

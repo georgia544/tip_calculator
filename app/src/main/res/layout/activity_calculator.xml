@@ -5,14 +5,14 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/input_text"
+        android:id="@+id/all_calculations_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
         android:layout_marginEnd="30dp"
-        app:layout_constraintBottom_toTopOf="@id/result_text"
+        app:layout_constraintBottom_toTopOf="@id/current_value_text"
         android:textSize="40dp"
         android:textColor="#21263880"
         android:alpha="50"
@@ -23,7 +23,7 @@
         app:layout_constraintHorizontal_bias="1"
         android:layout_marginEnd="30dp"
         android:maxLines="1"
-        android:id="@+id/result_text"
+        android:id="@+id/current_value_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="80sp"
@@ -51,7 +51,7 @@
         android:src="@drawable/logo"
         app:layout_constraintStart_toStartOf="@id/ac"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/input_text"
+        app:layout_constraintBottom_toTopOf="@id/all_calculations_text"
 
         />
 
