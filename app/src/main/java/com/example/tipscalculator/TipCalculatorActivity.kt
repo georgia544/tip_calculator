@@ -20,7 +20,7 @@ class TipCalculatorActivity : AppCompatActivity() {
         billAmount = findViewById(R.id.bill_amount)
         tipPercentage = findViewById(R.id.percentage)
 
-        val equalsButton = findViewById<Button>(R.id.equals_tip_calculator)
+        val equalsButton = findViewById<Button>(R.id.equals_suggested_tip)
 
         equalsButton.setOnClickListener {
             tipAmountTextView.text =
@@ -30,7 +30,6 @@ class TipCalculatorActivity : AppCompatActivity() {
         }
     }
 
-  private  fun Double.tipAmount(tipPercentage: Double) = (this * tipPercentage) / 100.0
 
 private fun totalAmountOfBill(tips:Double,billAmount:Double):Double{
     val total=tips+billAmount
@@ -39,3 +38,4 @@ private fun totalAmountOfBill(tips:Double,billAmount:Double):Double{
 
 
 }
+    fun Double.tipAmount(tipPercentage: Double) = (this * tipPercentage) / 100.0

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_theme"
         android:layout_width="54dp"
@@ -30,7 +30,8 @@
         />
 
     <TextView
-        android:text="1455"
+        android:id="@+id/tip_20_percent_textview"
+        tools:text="1455"
         android:maxLines="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,7 +72,8 @@
         />
 
     <TextView
-        android:text="1271"
+        android:id="@+id/tip_18_percent_textview"
+        tools:text="1271"
         android:maxLines="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -111,7 +113,8 @@
         />
 
     <TextView
-        android:text="1094"
+        android:id="@+id/tip_15_percent_textview"
+        tools:text="1094"
         android:maxLines="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -151,7 +154,8 @@
         />
 
     <TextView
-        android:text="928"
+        android:id="@+id/tip_10_percent_textview"
+        tools:text="928"
         android:maxLines="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -174,12 +178,12 @@
         android:layout_marginTop="31dp"
         app:layout_constraintStart_toStartOf="@id/total_bill_text4"
         app:layout_constraintBottom_toTopOf="@id/total_bill_text4"
-        app:layout_constraintTop_toBottomOf="@id/equals_tip_calculator"
+        app:layout_constraintTop_toBottomOf="@id/equals_suggested_tip"
         />
 
     <androidx.appcompat.widget.AppCompatButton
         android:text="="
-        android:id="@+id/equals_tip_calculator"
+        android:id="@+id/equals_suggested_tip"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:textColor="@color/white"
@@ -193,6 +197,7 @@
         />
 
     <EditText
+        android:inputType="numberDecimal"
         android:id="@+id/bill"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -203,7 +208,7 @@
         android:background="@drawable/rounded_rectangle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/equals_tip_calculator"
+        app:layout_constraintBottom_toTopOf="@+id/equals_suggested_tip"
         android:layout_marginBottom="66dp"
         />
 
