@@ -5,25 +5,24 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Switch
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.content.edit
 
 class HomeActivity : AppCompatActivity() {
 
-    private val sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE)
+    private lateinit var sharedPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        sharedPreferences = getSharedPreferences("sharedPrefs_home", MODE_PRIVATE)
 
-        val booleanValue = sharedPreferences.getBoolean("switch", false)
+        val booleanValueHome = sharedPreferences.getBoolean("switch_home", false)
 
-        val switch = findViewById<SwitchCompat>(R.id.switch_theme_home)
+        val switchHome = findViewById<SwitchCompat>(R.id.switch_theme_home)
 
-        switch.isChecked = booleanValue
+        switchHome.isChecked = booleanValueHome
 
-        switch.setOnCheckedChangeListener { compoundButton, isChecked ->
-            sharedPreferences.edit().putBoolean("switch", isChecked).apply()
+        switchHome.setOnCheckedChangeListener { compoundButton, isChecked ->
+            sharedPreferences.edit().putBoolean("switch_home", isChecked).apply()
         }
 
         val calculatorButton = findViewById<Button>(R.id.calculator)

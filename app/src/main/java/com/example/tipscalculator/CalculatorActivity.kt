@@ -1,18 +1,33 @@
 package com.example.tipscalculator
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 
 class CalculatorActivity : AppCompatActivity() {
+    private lateinit var sharedPreferences: SharedPreferences
 
     private val calculator = Calculator()
     private lateinit var allCalculationsTextView: TextView
     private  lateinit var  currentValueTextView: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
+        sharedPreferences = getSharedPreferences("sharedPrefs_calc", MODE_PRIVATE)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calculator)
+
+        val booleanValueCalc = sharedPreferences.getBoolean("switch_calc", false)
+
+        val switchCalc = findViewById<SwitchCompat>(R.id.switch_theme_calculator)
+
+        switchCalc.isChecked = booleanValueCalc
+
+        switchCalc.setOnCheckedChangeListener { compoundButton, isChecked ->
+            sharedPreferences.edit().putBoolean("switch_calc", isChecked).apply()
+        }
+
         allCalculationsTextView = findViewById(R.id.all_calculations_text)
 
        currentValueTextView = findViewById(R.id.current_value_text)
@@ -44,7 +59,7 @@ class CalculatorActivity : AppCompatActivity() {
         val buttonEquals = findViewById<Button>(R.id.equals)
 
         val buttons = listOf<Button>(
-            button0, button1, button2,
+            button1, button2,
             button3, button4, button5,
             button6, button7, button8, button9
         )
@@ -54,16 +69,33 @@ class CalculatorActivity : AppCompatActivity() {
         for (i in buttons.indices) {
             buttons[i].setOnClickListener {
                 if (shouldClearNumber) {
-                    currentValueTextView.text = i.toString()
+                    currentValueTextView.text = (i+1).toString()
                     shouldClearNumber = false
                 } else {
 
-                    currentValueTextView.text = currentValueTextView.text.toString() + i
+                    currentValueTextView.text = currentValueTextView.text.toString() + (i+1)
                 }
 
 
-                allCalculationsTextView.text = allCalculationsTextView.text.toString() + i
+                allCalculationsTextView.text = allCalculationsTextView.text.toString() + (i+1)
             }
+        }
+
+        button0.setOnClickListener {
+            if(currentValueTextView.text=="0"){
+                return@setOnClickListener
+            }
+
+            if (shouldClearNumber) {
+                currentValueTextView.text = "0"
+                shouldClearNumber = false
+            } else {
+
+                currentValueTextView.text = currentValueTextView.text.toString() + "0"
+            }
+
+
+            allCalculationsTextView.text = allCalculationsTextView.text.toString() + "0"
         }
 
 
@@ -110,6 +142,8 @@ class CalculatorActivity : AppCompatActivity() {
             calculator.calculate(currentValueTextView.text.toSafeDouble())
             currentValueTextView.text = calculator.number.removeZeroAfterDot()
         }
+
+
 
     }
 
