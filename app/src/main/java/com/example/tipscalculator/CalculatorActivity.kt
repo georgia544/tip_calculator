@@ -7,12 +7,19 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 
+private const val ACTION_SYMBOL_PLUS = "+"
+private const val ACTION_SYMBOL_MINUS = "-"
+private const val ACTION_SYMBOL_DIVIDE = "÷"
+private const val ACTION_SYMBOL_MULTIPLY = "x"
+
 class CalculatorActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
 
     private val calculator = Calculator()
     private lateinit var allCalculationsTextView: TextView
     private lateinit var currentValueTextView: TextView
+
+    private var shouldClearNumberInCurrentValue: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         sharedPreferences = getSharedPreferences("sharedPrefs_calc", MODE_PRIVATE)
         super.onCreate(savedInstanceState)
@@ -64,7 +71,6 @@ class CalculatorActivity : AppCompatActivity() {
             button6, button7, button8, button9
         )
 
-        var shouldClearNumberInCurrentValue: Boolean = false
         var shouldClearNumberInAllCalculations: Boolean = false
 
 
@@ -81,8 +87,8 @@ class CalculatorActivity : AppCompatActivity() {
                 if (shouldClearNumberInAllCalculations) {
                     allCalculationsTextView.text = (i + 1).toString()
                     shouldClearNumberInAllCalculations = false
-                }else{
-                    allCalculationsTextView.text = allCalculationsTextView.text.toString()+(i+1)
+                } else {
+                    allCalculationsTextView.text = allCalculationsTextView.text.toString() + (i + 1)
                 }
             }
         }
@@ -110,8 +116,8 @@ class CalculatorActivity : AppCompatActivity() {
             allCalculationsTextView.text = allCalculationsTextView.text.toString() + "."
         }
         buttonDelete.setOnClickListener {
-            currentValueTextView.text = removeLastChar(currentValueTextView.text.toString())
-            allCalculationsTextView.text = removeLastChar(allCalculationsTextView.text.toString())
+            currentValueTextView.text = currentValueTextView.text.toString().removeLastChar()
+            allCalculationsTextView.text = allCalculationsTextView.text.toString().removeLastChar()
         }
         buttonDeleteAll.setOnClickListener {
             currentValueTextView.text = ""
@@ -120,38 +126,31 @@ class CalculatorActivity : AppCompatActivity() {
 
 
         buttonPlus.setOnClickListener {
-            shouldClearNumberInCurrentValue = true
-            setCalculatorProperties(CalculatorAction.PLUS)
-            allCalculationsTextView.text = allCalculationsTextView.text.toString() + "+"
+            handleCalculatorAction(CalculatorAction.PLUS, ACTION_SYMBOL_PLUS)
         }
-
         buttonMinus.setOnClickListener {
-            shouldClearNumberInCurrentValue = true
-            setCalculatorProperties(CalculatorAction.MINUS)
-            allCalculationsTextView.text = allCalculationsTextView.text.toString() + "-"
+            handleCalculatorAction(CalculatorAction.MINUS, ACTION_SYMBOL_MINUS)
         }
-
         buttonDivide.setOnClickListener {
-            shouldClearNumberInCurrentValue = true
-            setCalculatorProperties(CalculatorAction.DIVIDE)
-            allCalculationsTextView.text = allCalculationsTextView.text.toString() + "÷"
+            handleCalculatorAction(CalculatorAction.DIVIDE, ACTION_SYMBOL_DIVIDE)
         }
-
         buttonMultiple.setOnClickListener {
             ifNoneInResult()
-            shouldClearNumberInCurrentValue = true
-            setCalculatorProperties(CalculatorAction.MULTIPLY)
-            allCalculationsTextView.text = allCalculationsTextView.text.toString() + "x"
+            handleCalculatorAction(CalculatorAction.MULTIPLY, ACTION_SYMBOL_MULTIPLY)
         }
 
         buttonEquals.setOnClickListener {
             shouldClearNumberInAllCalculations = true
             shouldClearNumberInCurrentValue = true
-            calculator.calculate(currentValueTextView.text.toSafeDouble())
-            currentValueTextView.text = calculator.number.removeZeroAfterDot()
+            calculateResult()
         }
 
 
+    }
+
+    private fun calculateResult() {
+        calculator.calculate(currentValueTextView.text.toSafeDouble())
+        currentValueTextView.text = calculator.number.removeZeroAfterDot()
     }
 
     private fun ifNoneInResult() {
@@ -170,26 +169,37 @@ class CalculatorActivity : AppCompatActivity() {
         }
     }
 
-    private fun removeLastChar(text: String): String {
-        return if (text.isNotEmpty())
-            text.substring(0, text.length - 1)
+    private fun String.removeLastChar(): String {
+        return if (this.isNotEmpty())
+            this.substring(0, this.length - 1)
         else
-            text
+            this
     }
 
 
-    private fun setCalculatorProperties(action: CalculatorAction) {
+    private fun handleCalculatorAction(action: CalculatorAction, actionSymbol: String) {
+        if (allCalculationsTextView.text.toString().last().toString() in listOf(
+                ACTION_SYMBOL_PLUS,
+                ACTION_SYMBOL_MINUS, ACTION_SYMBOL_DIVIDE, ACTION_SYMBOL_MULTIPLY
+            )
+        ) {
+            allCalculationsTextView.text = allCalculationsTextView.text.toString().removeLastChar()
+        }
+        shouldClearNumberInCurrentValue = true
+
+        if (calculator.action != CalculatorAction.NONE) {
+            calculateResult()
+        }
+
         calculator.number = currentValueTextView.text.toSafeDouble()
 
         calculator.action = action
+
+        allCalculationsTextView.text = allCalculationsTextView.text.toString() + actionSymbol
     }
 
     private fun CharSequence.toSafeDouble(): Double {
         return this.toString().toDouble()
-    }
-
-    private fun charSequenceToSafeDouble(charSequence: CharSequence): Double {
-        return charSequence.toString().toDouble()
     }
 
 }
